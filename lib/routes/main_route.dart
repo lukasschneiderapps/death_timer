@@ -1,5 +1,6 @@
 import 'package:death_timer/data/data.dart';
 import 'package:death_timer/routes/setup_route.dart';
+import 'package:death_timer/ui/date_utils.dart';
 import 'package:death_timer/ui/number_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,8 +11,6 @@ class MainRoute extends StatefulWidget {
 }
 
 class MainRouteState extends State<MainRoute> {
-  static const int minutesPerYear = 525600;
-
   Duration timeLeftToLiveDuration;
 
   @override
@@ -23,13 +22,12 @@ class MainRouteState extends State<MainRoute> {
   initialize() async {
     DateTime dateOfBirth = await Data.getDateOfBirth();
     int estimatedAge = await Data.getEstimatedAge();
-
-    Duration lifeDuration = Duration(minutes: estimatedAge * minutesPerYear);
-    Duration alreadyLivedDuration = dateOfBirth.difference(DateTime.now());
+    Duration tmpTimeLeftToLiveDuration =
+        await DateUtils.calculateTimeLeftToLiveDuration(
+            dateOfBirth, estimatedAge);
 
     setState(() {
-      timeLeftToLiveDuration = Duration(
-          minutes: lifeDuration.inMinutes - alreadyLivedDuration.inMinutes);
+      timeLeftToLiveDuration = tmpTimeLeftToLiveDuration;
     });
   }
 
@@ -44,14 +42,17 @@ class MainRouteState extends State<MainRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            actions: [InkWell(
-              customBorder: CircleBorder(),
-              onTap: _onEditClicked,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Icon(Icons.edit),
-              ),
-            )],
+            actions: [
+              InkWell(
+                customBorder: CircleBorder(),
+                onTap: _onEditClicked,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Icon(Icons.edit),
+                ),
+              )
+            ],
+            centerTitle: true,
             title: Text("Death Timer",
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 28))),
         backgroundColor: Colors.white,
@@ -77,25 +78,24 @@ class MainRouteState extends State<MainRoute> {
                                             fontWeight: FontWeight.w600,
                                             fontSize: 25),
                                       ),
-                                      SizedBox(height: 5),
+                                      SizedBox(height: 10),
                                       NumberText(
-                                          (timeLeftToLiveDuration.inMinutes /
-                                                  minutesPerYear)
-                                              .round(),
+                                          timeLeftToLiveDuration.inMinutes ~/
+                                              DateUtils.minutesPerYear,
                                           "years"),
                                       SizedBox(height: 5),
                                       NumberText(
                                           (timeLeftToLiveDuration.inMinutes /
-                                                  minutesPerYear *
+                                                  DateUtils.minutesPerYear *
                                                   12.0)
-                                              .round(),
+                                              .toInt(),
                                           "months"),
                                       SizedBox(height: 5),
                                       NumberText(
                                           (timeLeftToLiveDuration.inMinutes /
-                                                  minutesPerYear *
+                                                  DateUtils.minutesPerYear *
                                                   52.143)
-                                              .round(),
+                                              .toInt(),
                                           "weeks"),
                                       SizedBox(height: 5),
                                       NumberText(timeLeftToLiveDuration.inDays,
