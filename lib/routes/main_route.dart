@@ -1,4 +1,5 @@
 import 'package:death_timer/data/data.dart';
+import 'package:death_timer/routes/setup_route.dart';
 import 'package:death_timer/ui/number_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -32,12 +33,27 @@ class MainRouteState extends State<MainRoute> {
     });
   }
 
+  _onEditClicked() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SetupRoute()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            actions: [InkWell(
+              customBorder: CircleBorder(),
+              onTap: _onEditClicked,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Icon(Icons.edit),
+              ),
+            )],
             title: Text("Death Timer",
-                style: TextStyle(fontWeight: FontWeight.w600))),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 28))),
         backgroundColor: Colors.white,
         body: SafeArea(
             child: Container(
@@ -58,7 +74,7 @@ class MainRouteState extends State<MainRoute> {
                                         "You'll die in..",
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w600,
                                             fontSize: 25),
                                       ),
                                       SizedBox(height: 5),
