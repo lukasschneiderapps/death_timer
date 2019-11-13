@@ -11,4 +11,8 @@ class DateUtils {
         minutes: lifeDuration.inMinutes - alreadyLivedDuration.inMinutes);
   }
 
+  static DateTime calculateDateOfDeath(Duration timeLeftToLive) {
+    return DateTime.now().add(timeLeftToLive);
+  }
+
 }

@@ -12,6 +12,7 @@ class MainRoute extends StatefulWidget {
 
 class MainRouteState extends State<MainRoute> {
   Duration timeLeftToLiveDuration;
+  DateTime dateOfDeath;
 
   @override
   void initState() {
@@ -28,6 +29,7 @@ class MainRouteState extends State<MainRoute> {
 
     setState(() {
       timeLeftToLiveDuration = tmpTimeLeftToLiveDuration;
+      dateOfDeath  = DateUtils.calculateDateOfDeath(timeLeftToLiveDuration);
     });
   }
 
@@ -111,6 +113,20 @@ class MainRouteState extends State<MainRoute> {
                                       NumberText(
                                           timeLeftToLiveDuration.inSeconds,
                                           "seconds"),
+                                SizedBox(height: 16),
+                                      Text(
+                                        "Date of death:",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 25),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(DateFormat("dd/MM/yyyy").format(dateOfDeath),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w200,
+                                              fontSize: 25))
                                     ]),
                         )),
                   ],
