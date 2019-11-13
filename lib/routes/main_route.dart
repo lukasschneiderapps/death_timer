@@ -1,4 +1,5 @@
 import 'package:death_timer/data/data.dart';
+import 'package:death_timer/ui/number_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,11 +10,6 @@ class MainRoute extends StatefulWidget {
 
 class MainRouteState extends State<MainRoute> {
   static const int minutesPerYear = 525600;
-
-  TextStyle numberTextStyle =
-      TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 25);
-
-  NumberFormat numberFormat = NumberFormat.decimalPattern();
 
   Duration timeLeftToLiveDuration;
 
@@ -66,40 +62,39 @@ class MainRouteState extends State<MainRoute> {
                                             fontSize: 25),
                                       ),
                                       SizedBox(height: 5),
-                                      Text(
-                                        "${numberFormat.format((timeLeftToLiveDuration.inMinutes / minutesPerYear).round())} years",
-                                        style: numberTextStyle,
-                                      ),
+                                      NumberText(
+                                          (timeLeftToLiveDuration.inMinutes /
+                                                  minutesPerYear)
+                                              .round(),
+                                          "years"),
                                       SizedBox(height: 5),
-                                      Text(
-                                        "${numberFormat.format((timeLeftToLiveDuration.inMinutes / minutesPerYear * 12.0).round())} months",
-                                        style: numberTextStyle,
-                                      ),
+                                      NumberText(
+                                          (timeLeftToLiveDuration.inMinutes /
+                                                  minutesPerYear *
+                                                  12.0)
+                                              .round(),
+                                          "months"),
                                       SizedBox(height: 5),
-                                      Text(
-                                        "${numberFormat.format((timeLeftToLiveDuration.inMinutes / minutesPerYear * 52.143).round())} weeks",
-                                        style: numberTextStyle,
-                                      ),
+                                      NumberText(
+                                          (timeLeftToLiveDuration.inMinutes /
+                                                  minutesPerYear *
+                                                  52.143)
+                                              .round(),
+                                          "weeks"),
                                       SizedBox(height: 5),
-                                      Text(
-                                        "${numberFormat.format(timeLeftToLiveDuration.inDays)} days",
-                                        style: numberTextStyle,
-                                      ),
+                                      NumberText(timeLeftToLiveDuration.inDays,
+                                          "days"),
                                       SizedBox(height: 5),
-                                      Text(
-                                        "${numberFormat.format(timeLeftToLiveDuration.inHours)} hours",
-                                        style: numberTextStyle,
-                                      ),
+                                      NumberText(timeLeftToLiveDuration.inHours,
+                                          "hours"),
                                       SizedBox(height: 5),
-                                      Text(
-                                        "${numberFormat.format(timeLeftToLiveDuration.inMinutes)} minutes",
-                                        style: numberTextStyle,
-                                      ),
+                                      NumberText(
+                                          timeLeftToLiveDuration.inMinutes,
+                                          "minutes"),
                                       SizedBox(height: 5),
-                                      Text(
-                                        "${numberFormat.format(timeLeftToLiveDuration.inSeconds)} seconds",
-                                        style: numberTextStyle,
-                                      ),
+                                      NumberText(
+                                          timeLeftToLiveDuration.inSeconds,
+                                          "seconds"),
                                     ]),
                         )),
                   ],
