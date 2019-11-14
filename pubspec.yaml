@@ -26,6 +26,7 @@ dependencies:
   jiffy: ^2.1.1
   intl: ^0.16.0
   shared_preferences: ^0.5.4+3
+  time_machine: ^0.9.12
 
 dev_dependencies:
   flutter_test:

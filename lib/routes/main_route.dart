@@ -6,6 +6,7 @@ import 'package:death_timer/ui/date_utils.dart';
 import 'package:death_timer/ui/number_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:time_machine/time_machine.dart';
 
 class MainRoute extends StatefulWidget {
   @override
@@ -13,33 +14,34 @@ class MainRoute extends StatefulWidget {
 }
 
 class MainRouteState extends State<MainRoute> {
-  Duration timeLeftToLiveDuration;
-  DateTime dateOfDeath;
+  Time timeLeftToLive;
+  Instant dateOfBirth;
+  Instant dateOfDeath;
   int livedPercentage;
 
   @override
   void initState() {
     super.initState();
-    startRebuildingLoop();
+    _startRebuildingLoop();
   }
 
-  startRebuildingLoop() async {
-    Timer.periodic(Duration(seconds: 1), (Timer t) async {
-      DateTime dateOfBirth = await Data.getDateOfBirth();
+  _startRebuildingLoop() {
+    Future.delayed(Duration(seconds: 1), () async {
+      DateTime dateOfBirthDateTime = await Data.getDateOfBirth();
       int estimatedAge = await Data.getEstimatedAge();
-      Duration tmpTimeLeftToLiveDuration =
-          await DateUtils.calculateTimeLeftToLiveDuration(
-              dateOfBirth, estimatedAge);
+      Time lifeTime =
+          DateUtils.calculateLifeTime(dateOfBirthDateTime, estimatedAge);
 
       setState(() {
-        timeLeftToLiveDuration = tmpTimeLeftToLiveDuration;
-        dateOfDeath = DateUtils.calculateDateOfDeath(timeLeftToLiveDuration);
-        livedPercentage = (100 *
-                (1 -
-                    tmpTimeLeftToLiveDuration.inMinutes /
-                        (estimatedAge * DateUtils.minutesPerYear)))
-            .round();
+        dateOfBirth = Instant.dateTime(dateOfBirthDateTime);
+        timeLeftToLive = DateUtils.calculateTimeLeftToLive(
+            dateOfBirthDateTime, estimatedAge);
+        dateOfDeath = DateUtils.calculateDateOfDeath(timeLeftToLive);
+        livedPercentage =
+            DateUtils.calculateLivedPercentage(timeLeftToLive, lifeTime);
       });
+
+      _startRebuildingLoop();
     });
   }
 
@@ -80,7 +82,7 @@ class MainRouteState extends State<MainRoute> {
                           padding: const EdgeInsets.all(24.0),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: timeLeftToLiveDuration == null
+                              children: timeLeftToLive == null
                                   ? []
                                   : [
                                       SizedBox(
@@ -113,40 +115,32 @@ class MainRouteState extends State<MainRoute> {
                                       ),
                                       SizedBox(height: 10),
                                       NumberText(
-                                          timeLeftToLiveDuration.inMinutes ~/
-                                              DateUtils.minutesPerYear,
+                                          DateUtils.calculatePeriodFromNowUntil(
+                                                  dateOfDeath)
+                                              .years,
                                           "years"),
                                       SizedBox(height: 5),
                                       NumberText(
-                                          (timeLeftToLiveDuration.inMinutes /
-                                                  DateUtils.minutesPerYear *
-                                                  12.0)
-                                              .toInt(),
+                                          DateUtils.calculateMonthsFromNowUntil(
+                                              dateOfDeath),
                                           "months"),
                                       SizedBox(height: 5),
                                       NumberText(
-                                          (timeLeftToLiveDuration.inMinutes /
-                                                  DateUtils.minutesPerYear *
-                                                  52.143)
-                                              .toInt(),
-                                          "weeks"),
+                                          timeLeftToLive.inDays ~/ 7, "weeks"),
                                       SizedBox(height: 5),
-                                      NumberText(timeLeftToLiveDuration.inDays,
-                                          "days"),
-                                      SizedBox(height: 5),
-                                      NumberText(timeLeftToLiveDuration.inHours,
-                                          "hours"),
+                                      NumberText(timeLeftToLive.inDays, "days"),
                                       SizedBox(height: 5),
                                       NumberText(
-                                          timeLeftToLiveDuration.inMinutes,
-                                          "minutes"),
+                                          timeLeftToLive.inHours, "hours"),
                                       SizedBox(height: 5),
                                       NumberText(
-                                          timeLeftToLiveDuration.inSeconds,
-                                          "seconds"),
+                                          timeLeftToLive.inMinutes, "minutes"),
+                                      SizedBox(height: 5),
+                                      NumberText(
+                                          timeLeftToLive.inSeconds, "seconds"),
                                       SizedBox(height: 32),
                                       Text(
-                                        "Date of death:",
+                                        "Life span:",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
@@ -154,8 +148,11 @@ class MainRouteState extends State<MainRoute> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                          DateFormat("dd/MM/yyyy")
-                                              .format(dateOfDeath),
+                                          dateOfBirth.toString(
+                                                  DateUtils.DATE_FORMAT) +
+                                              " - " +
+                                              dateOfDeath.toString(
+                                                  DateUtils.DATE_FORMAT),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w200,
