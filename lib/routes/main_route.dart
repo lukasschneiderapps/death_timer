@@ -56,6 +56,7 @@ class MainRouteState extends State<MainRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            elevation: 0,
             actions: [
               InkWell(
                 customBorder: CircleBorder(),
@@ -72,93 +73,106 @@ class MainRouteState extends State<MainRoute> {
         backgroundColor: Colors.white,
         body: SafeArea(
             child: Container(
+                color: Colors.deepPurple,
                 padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    Card(
-                        color: Colors.deepPurple,
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: timeLeftToLive == null
-                                  ? []
-                                  : [
-                                      SizedBox(
-                                          height: 50,
-                                          child: Stack(
-                                            children: [
-                                              Positioned.fill(
-                                                child: LinearProgressIndicator(
-                                                    value:
-                                                        livedPercentage / 100.0,
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation(
-                                                            Colors.pink)),
-                                              ),
-                                              Center(
-                                                  child: Text(
-                                                      "$livedPercentage%",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 28))),
-                                            ],
-                                          )),
-                                      SizedBox(height: 30),
-                                      Text(
-                                        "You'll die in..",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 30),
-                                      ),
-                                      SizedBox(height: 10),
-                                      NumberText(
-                                          DateUtils.calculatePeriodFromNowUntil(
-                                                  dateOfDeath)
-                                              .years,
-                                          "years"),
-                                      SizedBox(height: 5),
-                                      NumberText(
-                                          DateUtils.calculateMonthsFromNowUntil(
-                                              dateOfDeath),
-                                          "months"),
-                                      SizedBox(height: 5),
-                                      NumberText(
-                                          timeLeftToLive.inDays ~/ 7, "weeks"),
-                                      SizedBox(height: 5),
-                                      NumberText(timeLeftToLive.inDays, "days"),
-                                      SizedBox(height: 5),
-                                      NumberText(
-                                          timeLeftToLive.inHours, "hours"),
-                                      SizedBox(height: 5),
-                                      NumberText(
-                                          timeLeftToLive.inMinutes, "minutes"),
-                                      SizedBox(height: 5),
-                                      NumberText(
-                                          timeLeftToLive.inSeconds, "seconds"),
-                                      SizedBox(height: 32),
-                                      Text(
-                                        "Life span:",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 30),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Text(
-                                          dateOfBirth.toString(
-                                                  DateUtils.DATE_FORMAT) +
-                                              " - " +
-                                              dateOfDeath.toString(
-                                                  DateUtils.DATE_FORMAT),
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w200,
-                                              fontSize: 25))
-                                    ]),
-                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 24, top: 16, right: 24, bottom: 24),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: timeLeftToLive == null
+                              ? [
+                                  // Loading data
+                                  Center(
+                                      child: CircularProgressIndicator(
+                                          valueColor: AlwaysStoppedAnimation(
+                                              Colors.white)))
+                                ]
+                              : [
+                                  // Data loaded
+                                  Chip(
+                                    padding: EdgeInsets.all(4),
+                                    backgroundColor: Colors.white,
+                                    label: Text(
+                                      "You'll die in..",
+                                      style: TextStyle(
+                                          color: Colors.deepPurple,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 30),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  NumberText(
+                                      DateUtils.calculatePeriodFromNowUntil(
+                                              dateOfDeath)
+                                          .years,
+                                      "years"),
+                                  SizedBox(height: 5),
+                                  NumberText(
+                                      DateUtils.calculateMonthsFromNowUntil(
+                                          dateOfDeath),
+                                      "months"),
+                                  SizedBox(height: 5),
+                                  NumberText(
+                                      timeLeftToLive.inDays ~/ 7, "weeks"),
+                                  SizedBox(height: 5),
+                                  NumberText(timeLeftToLive.inDays, "days"),
+                                  SizedBox(height: 5),
+                                  NumberText(timeLeftToLive.inHours, "hours"),
+                                  SizedBox(height: 5),
+                                  NumberText(
+                                      timeLeftToLive.inMinutes, "minutes"),
+                                  SizedBox(height: 5),
+                                  NumberText(
+                                      timeLeftToLive.inSeconds, "seconds"),
+                                  SizedBox(height: 32),
+                                  Chip(
+                                    padding: EdgeInsets.all(4),
+                                    backgroundColor: Colors.white,
+                                    label: Text(
+                                      "Life span:",
+                                      style: TextStyle(
+                                          color: Colors.deepPurple,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 30),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                      dateOfBirth
+                                              .toString(DateUtils.DATE_FORMAT) +
+                                          " - " +
+                                          dateOfDeath
+                                              .toString(DateUtils.DATE_FORMAT),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w200,
+                                          fontSize: 25)),
+                                  SizedBox(height: 16),
+                                  SizedBox(
+                                      height: 50,
+                                      child: Stack(
+                                        children: [
+                                          Positioned.fill(
+                                            child: LinearProgressIndicator(
+                                                value: livedPercentage / 100.0,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        Colors.pink)),
+                                          ),
+                                          Center(
+                                              child: Text("$livedPercentage%",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Colors.white,
+                                                      fontSize: 28))),
+                                        ],
+                                      )),
+                                ]),
+                    ),
                   ],
                 ))));
   }

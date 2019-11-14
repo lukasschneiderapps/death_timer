@@ -28,6 +28,11 @@ class SetupRouteState extends State<SetupRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          title: Text("Welcome!",
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 28))),
         backgroundColor: Colors.deepPurple,
         body: SafeArea(
           child: Container(
