@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:death_timer/data/data.dart';
 import 'package:death_timer/routes/setup_route.dart';
 import 'package:death_timer/ui/date_utils.dart';
@@ -18,24 +20,26 @@ class MainRouteState extends State<MainRoute> {
   @override
   void initState() {
     super.initState();
-    initialize();
+    startRebuildingLoop();
   }
 
-  initialize() async {
-    DateTime dateOfBirth = await Data.getDateOfBirth();
-    int estimatedAge = await Data.getEstimatedAge();
-    Duration tmpTimeLeftToLiveDuration =
-        await DateUtils.calculateTimeLeftToLiveDuration(
-            dateOfBirth, estimatedAge);
+  startRebuildingLoop() async {
+    Timer.periodic(Duration(seconds: 1), (Timer t) async {
+      DateTime dateOfBirth = await Data.getDateOfBirth();
+      int estimatedAge = await Data.getEstimatedAge();
+      Duration tmpTimeLeftToLiveDuration =
+          await DateUtils.calculateTimeLeftToLiveDuration(
+              dateOfBirth, estimatedAge);
 
-    setState(() {
-      timeLeftToLiveDuration = tmpTimeLeftToLiveDuration;
-      dateOfDeath = DateUtils.calculateDateOfDeath(timeLeftToLiveDuration);
-      livedPercentage = (100 *
-              (1 -
-                  tmpTimeLeftToLiveDuration.inMinutes /
-                      (estimatedAge * DateUtils.minutesPerYear)))
-          .round();
+      setState(() {
+        timeLeftToLiveDuration = tmpTimeLeftToLiveDuration;
+        dateOfDeath = DateUtils.calculateDateOfDeath(timeLeftToLiveDuration);
+        livedPercentage = (100 *
+                (1 -
+                    tmpTimeLeftToLiveDuration.inMinutes /
+                        (estimatedAge * DateUtils.minutesPerYear)))
+            .round();
+      });
     });
   }
 
