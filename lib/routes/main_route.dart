@@ -13,6 +13,7 @@ class MainRoute extends StatefulWidget {
 class MainRouteState extends State<MainRoute> {
   Duration timeLeftToLiveDuration;
   DateTime dateOfDeath;
+  int livedPercentage;
 
   @override
   void initState() {
@@ -29,7 +30,12 @@ class MainRouteState extends State<MainRoute> {
 
     setState(() {
       timeLeftToLiveDuration = tmpTimeLeftToLiveDuration;
-      dateOfDeath  = DateUtils.calculateDateOfDeath(timeLeftToLiveDuration);
+      dateOfDeath = DateUtils.calculateDateOfDeath(timeLeftToLiveDuration);
+      livedPercentage = (100 *
+              (1 -
+                  tmpTimeLeftToLiveDuration.inMinutes /
+                      (estimatedAge * DateUtils.minutesPerYear)))
+          .round();
     });
   }
 
@@ -67,18 +73,39 @@ class MainRouteState extends State<MainRoute> {
                     Card(
                         color: Colors.deepPurple,
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(24.0),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: timeLeftToLiveDuration == null
                                   ? []
                                   : [
+                                      SizedBox(
+                                          height: 50,
+                                          child: Stack(
+                                            children: [
+                                              Positioned.fill(
+                                                child: LinearProgressIndicator(
+                                                    value:
+                                                        livedPercentage / 100.0,
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation(
+                                                            Colors.pink)),
+                                              ),
+                                              Center(
+                                                  child: Text(
+                                                      "$livedPercentage%",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 28))),
+                                            ],
+                                          )),
+                                      SizedBox(height: 30),
                                       Text(
                                         "You'll die in..",
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 25),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 30),
                                       ),
                                       SizedBox(height: 10),
                                       NumberText(
@@ -113,16 +140,18 @@ class MainRouteState extends State<MainRoute> {
                                       NumberText(
                                           timeLeftToLiveDuration.inSeconds,
                                           "seconds"),
-                                SizedBox(height: 16),
+                                      SizedBox(height: 32),
                                       Text(
                                         "Date of death:",
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 25),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 30),
                                       ),
                                       SizedBox(height: 10),
-                                      Text(DateFormat("dd/MM/yyyy").format(dateOfDeath),
+                                      Text(
+                                          DateFormat("dd/MM/yyyy")
+                                              .format(dateOfDeath),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w200,

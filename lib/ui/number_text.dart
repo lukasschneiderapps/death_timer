@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class NumberText extends StatelessWidget {
   static final TextStyle numberTextStyle =
-  TextStyle(color: Colors.white, fontWeight: FontWeight.w200, fontSize: 25);
+  TextStyle(color: Colors.white, fontWeight: FontWeight.w100, fontSize: 25);
 
   static final NumberFormat numberFormat = NumberFormat.decimalPattern();
 
