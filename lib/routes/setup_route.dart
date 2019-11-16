@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:death_timer/data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
@@ -10,16 +12,25 @@ class SetupRoute extends StatefulWidget {
   State<StatefulWidget> createState() => SetupRouteState();
 }
 
-class SetupRouteState extends State<SetupRoute> {
+class SetupRouteState extends State<SetupRoute>
+    with SingleTickerProviderStateMixin {
   TextEditingController ageInputController = TextEditingController();
 
   DateTime _selectedDateOfBirth;
+
+  AnimationController _controller;
 
   bool _validAgeInput = true;
 
   @override
   void initState() {
     super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
     ageInputController.addListener(() {
       _verifyAgeInput();
     });
@@ -164,6 +175,22 @@ class SetupRouteState extends State<SetupRoute> {
 
   Future<Null> _selectBirthday() async {
     final DateTime picked = await showDatePicker(
+        builder: (BuildContext context, Widget child) {
+          _controller.reset();
+          _controller.forward();
+          return AnimatedBuilder(
+              animation: _controller,
+              child: child,
+              builder: (BuildContext context, Widget child) {
+                return Opacity(
+                  opacity: _controller.value,
+                  child: Transform.scale(
+                    scale: _controller.value,
+                    child: child,
+                  ),
+                );
+              });
+        },
         context: context,
         initialDate: _selectedDateOfBirth == null
             ? Jiffy(DateTime.now()).subtract(years: 20)
