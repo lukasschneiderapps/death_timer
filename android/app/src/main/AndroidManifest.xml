@@ -8,7 +8,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="death_timer"
+        android:label="Death Timer"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

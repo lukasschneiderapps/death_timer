@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         initialRoute: RoutePaths.splash,
         routes: RoutePaths.routes,
         title: 'Death Timer',
