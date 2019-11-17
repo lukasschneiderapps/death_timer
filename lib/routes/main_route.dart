@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:death_timer/data/data.dart';
 import 'package:death_timer/routes/setup_route.dart';
-import 'package:death_timer/ui/date_utils.dart';
+import 'package:death_timer/utils/constants.dart';
+import 'package:death_timer/utils/date_utils.dart';
 import 'package:death_timer/ui/number_text.dart';
+import 'package:death_timer/utils/navigation_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:time_machine/time_machine.dart';
@@ -46,10 +48,7 @@ class MainRouteState extends State<MainRoute> {
   }
 
   _onEditClicked() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SetupRoute()),
-    );
+    NavigationUtils.navigateToSetupRoute(context);
   }
 
   @override

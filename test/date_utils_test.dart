@@ -1,4 +1,4 @@
-import 'package:death_timer/ui/date_utils.dart';
+import 'package:death_timer/utils/date_utils.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:test/test.dart';
 

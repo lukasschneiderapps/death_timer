@@ -27,6 +27,7 @@ dependencies:
   intl: ^0.16.0
   shared_preferences: ^0.5.4+3
   time_machine: ^0.9.12
+  provider:
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:death_timer/data/data.dart';
+import 'package:death_timer/utils/input_validator.dart';
+import 'package:death_timer/utils/navigation_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:intl/intl.dart';
@@ -136,37 +138,13 @@ class SetupRouteState extends State<SetupRoute>
         _selectedDateOfBirth, int.parse(ageInputController.text));
 
     // Navigate to main page
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => MainRoute()),
-    );
+    NavigationUtils.navigateToMainRoute(context);
   }
 
   _verifyAgeInput() {
-    bool valid = _isAgeInputValid();
     setState(() {
-      _validAgeInput = valid;
+      _validAgeInput = InputValidator.isAgeInputValid(ageInputController.text);
     });
-  }
-
-  bool _isAgeInputValid() {
-    String input = ageInputController.text;
-
-    // Numeric
-    try {
-      int.parse(input);
-    } catch (Exception) {
-      return false;
-    }
-
-    // Positive
-    if (!(int.parse(input) > 0)) return false;
-
-    // In Range
-    if (int.parse(input) > 1000) return false;
-
-    // Valid
-    return true;
   }
 
   bool _isInputValid() {
