@@ -1,4 +1,4 @@
-# death_timer
+# Death Timer
 
 Flutter Learning Project
 
